@@ -1,7 +1,6 @@
-
 /*
 
-	A base class that will be used to describe the properties of any 
+	A base class that will be used to describe the basic properties of any 
 	object that we wish to place on the screen.
 
 	Will contain its character, colour, coordinates and functions to return these values.
@@ -18,7 +17,7 @@ public:
 	Object();
 	~Object();
 
-	// For debugging
+	// Setting the properties of our object
 	void setSymbol(char symbol); 
 	void setXPos(int xPos);		
 	void setYPos(int yPos);

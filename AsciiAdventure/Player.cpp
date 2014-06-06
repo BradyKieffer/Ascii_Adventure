@@ -1,6 +1,11 @@
 #include "Player.h"
 
 
+Player::Player()
+{
+	/* Default Constructor */
+}
+
 Player::Player(int yPos, int xPos)
 {
 	setCol(0);

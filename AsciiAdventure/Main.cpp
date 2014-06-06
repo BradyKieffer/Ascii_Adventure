@@ -13,8 +13,8 @@
 #include<curses.h>
 #include "GameEngine.h"
 
-const int HEIGHT = 80;
-const int WIDTH = 25;
+const int HEIGHT = 25;
+const int WIDTH = 80;
 
 int main()
 {
