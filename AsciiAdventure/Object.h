@@ -11,6 +11,8 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include<curses.h>
+
 class Object
 {
 public:
@@ -18,19 +20,19 @@ public:
 	~Object();
 
 	// Setting the properties of our object
-	void setSymbol(char symbol); 
+	void setSymbol(chtype symbol); 
 	void setXPos(int xPos);		
 	void setYPos(int yPos);
 	void setCol(int col);
 
 	// Get the properties of our object 
-	char getSymbol();
+	chtype getSymbol();
 	int getXPos();
 	int getYPos();
 	int getCol();
 
 private:
-	char character;
+	chtype character;
 	int x, y, colour;
 };
 

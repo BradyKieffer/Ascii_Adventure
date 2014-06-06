@@ -27,6 +27,11 @@ enum Tiles
 	TILE_TREE = 2
 };
 
+enum ColPairNums
+{
+	COL_PLAYER = 100,
+	COL_TREE = 101
+};
 
 class GameEngine
 {
@@ -50,6 +55,8 @@ private:
 	void getInput(char input); /* Will decide what to do based on the users input */
 	void moveChar(int deltaY, int deltaX); /* Add in the deltaX and deltaY and this function will add them to a char's 
 											  coordinates and ensure they are within bounds!!						  */
+
+	void colorPairs();
 };
 
 #endif 

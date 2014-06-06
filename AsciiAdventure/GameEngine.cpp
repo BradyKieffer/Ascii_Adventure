@@ -9,6 +9,7 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 	keypad(stdscr, TRUE);
 	noecho();
 	start_color();
+	colorPairs(); /* Create our color pairs here */
 	
 	/* Set up the game window */
 	gameScreen.setHeight(gameHeight);
@@ -16,6 +17,12 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 	gameScreen.initWindow();
 }
 
+void GameEngine::colorPairs()
+{
+	/* Players color selection */
+	init_pair(COL_PLAYER, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(COL_TREE, COLOR_GREEN, COLOR_BLACK);
+}
 
 GameEngine::~GameEngine()
 {}
@@ -46,7 +53,6 @@ void GameEngine::gameInit()
 void GameEngine::gameLoop()
 {
 	char inp;
-
 	
 	char heroSymbol = hero.getSymbol(); /* Just so we don't call this function a million times */
 	while (mainLoop == true)
@@ -83,7 +89,7 @@ void GameEngine::displayMap()
 				break;
 
 			case TILE_TREE:
-				mvaddch(i, j, 'T');
+				mvaddch(i, j, 'T' | COLOR_PAIR(COL_TREE));
 				break;
 			}
 		}

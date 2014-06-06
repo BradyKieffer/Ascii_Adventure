@@ -9,7 +9,7 @@ Player::Player()
 Player::Player(int yPos, int xPos)
 {
 	setCol(0);
-	setSymbol('@');
+	setSymbol('@' | COLOR_PAIR(100));
 	setXPos(xPos);
 	setYPos(yPos);
 }
