@@ -9,6 +9,8 @@
 #ifndef GAMEENGINE_H
 #define GAMEENGINE_H
 
+
+
 /* Debugging purposes */
 #include<iostream>
 
@@ -17,25 +19,27 @@
 #include "Map.h"
 #include"Screen.h"
 #include"Player.h"
+#include"MakeColors.h"
 
-// Used to display a certain tile type depending on the
-// given value in the map!
-enum Tiles
+struct TileType
 {
-	TILE_FLOOR = 0,
-	TILE_WALL = 1,
-	TILE_TREE = 2
-};
-
-enum ColPairNums
-{
-	COL_PLAYER = 100,
-	COL_TREE = 101
+	chtype symbol;
+	short colCode;
+	bool isPassable;
 };
 
 class GameEngine
 {
 public:
+
+	/* Tile types so that the code is easier to read */
+	enum TileTypes
+	{
+		TILE_ROCK_FLOOR = 0,
+		TILE_TREE = 1,
+		TILE_WALL = 2
+	};
+
 	GameEngine(int gameHeight, int gameWidth);
 	~GameEngine();
 
@@ -46,17 +50,21 @@ private:
 	Player hero; /* The default hero for our game! */
 	Screen gameScreen;
 	std::vector<std::vector<int>> gameMap;
+	std::vector<TileType> tileIndex;
 	bool mainLoop; /* The main loop for our game */
 
-
+	
 	const int MAP_WIDTH = 80, MAP_HEIGHT = 25; /* The size of the map that we will play on */
 
 	void displayMap();
 	void getInput(char input); /* Will decide what to do based on the users input */
 	void moveChar(int deltaY, int deltaX); /* Add in the deltaX and deltaY and this function will add them to a char's 
 											  coordinates and ensure they are within bounds!!						  */
+	void initTiles();
 
-	void colorPairs();
+	void setPlayerCoords();
+
 };
+
 
 #endif 

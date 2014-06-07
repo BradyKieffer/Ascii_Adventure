@@ -8,20 +8,16 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 	cbreak();
 	keypad(stdscr, TRUE);
 	noecho();
+	curs_set(0); /* Make the cursor invisible */
 	start_color();
-	colorPairs(); /* Create our color pairs here */
 	
+	MakeColors col;
+	col.initColors();
+
 	/* Set up the game window */
 	gameScreen.setHeight(gameHeight);
 	gameScreen.setWidth(gameWidth);
 	gameScreen.initWindow();
-}
-
-void GameEngine::colorPairs()
-{
-	/* Players color selection */
-	init_pair(COL_PLAYER, COLOR_YELLOW, COLOR_BLACK);
-	init_pair(COL_TREE, COLOR_GREEN, COLOR_BLACK);
 }
 
 GameEngine::~GameEngine()
@@ -29,6 +25,9 @@ GameEngine::~GameEngine()
 
 void GameEngine::gameInit()
 {
+	/* Set up the tile list */
+	initTiles();
+
 	/* Create our world */
 	Map genWorld(MAP_HEIGHT, MAP_WIDTH);
 	gameMap = genWorld.getMap();
@@ -49,12 +48,34 @@ void GameEngine::gameInit()
 
 }
 
+void GameEngine::initTiles()
+{
+	/* 
+	Enters the tile values to the vector for the tile index
+	
+	The index will be the tile type
+
+	Values are stored by symbol, color number and if the tile is passable
+	*/
+
+	tileIndex.resize(3);
+
+	/* Rock floor */
+	tileIndex[TILE_ROCK_FLOOR] = { '.', COL_ROCK_FLOOR, true };
+
+	/* Tree */
+	tileIndex[TILE_TREE] = { 'T', COL_TREE, false };
+
+	/* Wall */
+	tileIndex[TILE_WALL] = { '#', COL_WALL, false };
+}
 
 void GameEngine::gameLoop()
 {
 	char inp;
 	
-	char heroSymbol = hero.getSymbol(); /* Just so we don't call this function a million times */
+	setPlayerCoords();
+
 	while (mainLoop == true)
 	{
 		
@@ -73,25 +94,15 @@ void GameEngine::gameLoop()
 
 void GameEngine::displayMap()
 {
+	int tileType;
+	char tileSym;
+	short colCode;
 	for (int i = 0; i < gameMap.size(); i++)
 	{
 		for (int j = 0; j < gameMap[i].size(); j++)
 		{
-			switch (gameMap[i][j])
-			{
-			case TILE_FLOOR:
-				
-				mvaddch(i, j, '.');
-				break;
-
-			case TILE_WALL:
-				mvaddch(i, j, '#');
-				break;
-
-			case TILE_TREE:
-				mvaddch(i, j, 'T' | COLOR_PAIR(COL_TREE));
-				break;
-			}
+			tileType = gameMap[i][j];
+			mvaddch(i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
 		}
 	}
 }
@@ -153,8 +164,6 @@ void GameEngine::getInput(char input)
 
 void GameEngine::moveChar(int deltaY, int deltaX)
 {
-	mvaddch(hero.getYPos(), hero.getXPos(), ' '); /* Bad way of removing the character's old sprite */
-	
 	
 	if (hero.getYPos() + deltaY < 0 || hero.getYPos() + deltaY > MAP_HEIGHT - 1)
 	{
@@ -169,11 +178,31 @@ void GameEngine::moveChar(int deltaY, int deltaX)
 		deltaX = 0;
 	}
 
-	if (gameMap[hero.getYPos() + deltaY][hero.getXPos() + deltaX] == TILE_FLOOR)
+	int tileMoveToType = gameMap[hero.getYPos() + deltaY][hero.getXPos() + deltaX];
+
+	if (tileIndex[tileMoveToType].isPassable == true)
 	{
 		/* We are moving onto a floor tile! yay! */
 		/* Add the results to the heroes coordinates */
 		hero.setYPos(hero.getYPos() + deltaY);
 		hero.setXPos(hero.getXPos() + deltaX);
+	}
+}
+
+void GameEngine::setPlayerCoords()
+{
+	/* For now just set the player to the first found walkable tile */
+	for (int i = 0; i < MAP_HEIGHT; i++)
+	{
+		for (int j = 0; j < MAP_WIDTH; j++)
+		{
+			if (tileIndex[gameMap[i][j]].isPassable == true)
+			{
+				/* We found our spot yay! */
+				hero.setYPos(i);
+				hero.setXPos(j);
+				break;
+			}
+		}
 	}
 }
