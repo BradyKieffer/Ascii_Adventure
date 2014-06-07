@@ -8,11 +8,6 @@
 	Last Revised:	05-06-2014
 	Author:			Brady Kieffer
 
-	TODO:
-		Implement a structure for tiles that will store their properties
-
-		Add something to control the defined color pairs
-
 */
 
 #include<curses.h>
