@@ -45,7 +45,7 @@ void Map::initMap()
 void Map::genMap()
 {
 	/* Two random points that we will connect, declare their x and y*/
-	int x, y, xo, yo;
+	int x, y, xo, yo, roomsPlaced = 0;
 	int counter = 0;
 
 	while (counter < NUM_ROOMS)
@@ -61,12 +61,16 @@ void Map::genMap()
 				gameMap[i][j] = GameEngine::TILE_ROCK_FLOOR;
 			}
 		}
-		makeHall(x, y);
+		roomsPlaced++;
+
+		if (roomsPlaced > 1)
+			makeHall(x, y);
+		
 
 		counter++;
 	}
 
-	addRandomWalls();
+	//addRandomWalls();
 }
 
 void Map::addRandomTrees()
@@ -152,6 +156,51 @@ void Map::makeHall(int x, int y)
 	x += (ROOM_SIZE / 2);
 	y += (ROOM_SIZE / 2);
 
+	bool notConnected = true;
+	int roomOffset = (ROOM_SIZE / 2) ; // Just to offset the start of our loops
+	int xo = 0, yo = 0;
+
+	
+	/* Scan to design some halls that are 90 degrees */
+	for (int i = x + roomOffset; i < mapWidth; i++)
+	{
+		bool foundHall = false;
+
+
+		if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
+			break;
+
+		for (int j = 0; j < mapHeight; j++)
+		{
+			if (gameMap[j][i] == GameEngine::TILE_ROCK_FLOOR)
+			{
+				yo = j;
+				xo = i;
+				foundHall = true;
+			}
+		}
+
+		gameMap[y][i] = GameEngine::TILE_ROCK_FLOOR;
+
+		if (foundHall == true)
+		{
+			if (yo < y)
+			{
+				carveDownward(x + roomOffset, y, xo, yo);
+			}
+			else if (yo > y)
+			{
+				carveUpward(x + roomOffset, y, xo, yo);
+			}
+			break;
+		}
+	}
+	/* OLD MAKE HALL */
+	/*
+	 First calc the middle of the room, it's 2 over from x and y
+	x += (ROOM_SIZE / 2);
+	y += (ROOM_SIZE / 2);
+
 	int roomOffset = (ROOM_SIZE / 2) + 1; // Just to offset the start of our loops
 
 	int dir = rand() % 11;
@@ -194,5 +243,25 @@ void Map::makeHall(int x, int y)
 				break;
 			gameMap[y][i] = GameEngine::TILE_ROCK_FLOOR;
 		}
+	}
+
+	*/
+}
+
+void Map::carveUpward(int x, int y, int xo, int yo)
+{
+	/* We carve a hall straight up to connect the room! */
+	for (int i = y; i < yo; i++)
+	{
+		gameMap[i][xo] = GameEngine::TILE_ROCK_FLOOR;
+	}
+}
+
+void Map::carveDownward(int x, int y, int xo, int yo)
+{
+	/* We carve a hall straight up to connect the room! */
+	for (int i = yo; i < y; i++)
+	{
+		gameMap[i][xo] = GameEngine::TILE_ROCK_FLOOR;
 	}
 }

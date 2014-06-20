@@ -17,7 +17,6 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 
 	/* Set up the game window */
 	gameWin = newwin(gameHeight, gameWidth, 0, 0);
-	
 }
 
 GameEngine::~GameEngine()
@@ -119,7 +118,7 @@ void GameEngine::displayMap()
 			mvwaddch(gameWin, i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
 		}
 	}
-	touchwin(gameWin);
+	
 }
 
 void GameEngine::getInput(char input)
@@ -171,6 +170,13 @@ void GameEngine::getInput(char input)
 	case 'q':
 		// Quit the game
 		mainLoop = false;
+		break;
+
+	case 'R':
+	case 'r':
+		/* Debug for now.. */
+		gameInit();
+		break;
 
 	default:
 		break;
