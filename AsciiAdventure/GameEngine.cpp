@@ -6,22 +6,38 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 	/* Curses code to set up the background for our input and initialize various other things */
 	initscr();
 	cbreak();
-	keypad(stdscr, TRUE);
+	keypad(gameWin, TRUE);
 	noecho();
 	curs_set(0); /* Make the cursor invisible */
 	start_color();
-	
+	PDC_set_blink(TRUE);
+
 	MakeColors col;
 	col.initColors();
 
 	/* Set up the game window */
-	gameScreen.setHeight(gameHeight);
-	gameScreen.setWidth(gameWidth);
-	gameScreen.initWindow();
+	gameWin = newwin(gameHeight, gameWidth, 0, 0);
+	
 }
 
 GameEngine::~GameEngine()
-{}
+{
+
+	delwin(playerHUD);
+	delwin(gameWin);
+}
+
+/* Getters */
+
+int GameEngine::getHeight()
+{
+	return MAP_HEIGHT;
+}
+
+int GameEngine::getWidth()
+{
+	return MAP_WIDTH;
+}
 
 void GameEngine::gameInit()
 {
@@ -39,10 +55,6 @@ void GameEngine::gameInit()
 	Player tmp(0, 0);
 	hero = tmp;
 	
-	/*Debugging purposes*/
-	std::cout << "Game Height: " << gameScreen.getHeight() << std::endl;
-	std::cout << "Game Width: " << gameScreen.getWidth() << std::endl;
-
 	gameLoop();
 
 
@@ -64,7 +76,7 @@ void GameEngine::initTiles()
 	tileIndex[TILE_ROCK_FLOOR] = { '.', COL_ROCK_FLOOR, true };
 
 	/* Tree */
-	tileIndex[TILE_TREE] = { 'T', COL_TREE, false };
+	tileIndex[TILE_TREE] = { 'T' , COL_TREE, false };
 
 	/* Wall */
 	tileIndex[TILE_WALL] = { '#', COL_WALL, false };
@@ -75,36 +87,39 @@ void GameEngine::gameLoop()
 	char inp;
 	
 	setPlayerCoords();
-
+	
 	while (mainLoop == true)
 	{
-		
 		displayMap();
 		/*Debugging purposes*/
 		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
 
 		/* Draw the hero to the screen*/
-		mvaddch(hero.getYPos(), hero.getXPos() ,hero.getSymbol());
+		mvwaddch(gameWin,hero.getYPos(), hero.getXPos() ,hero.getSymbol());
+		wrefresh(gameWin);
 
-		inp = getch();
+		inp = wgetch(gameWin);
 		getInput(inp);
-
+		
 	}
 }
 
 void GameEngine::displayMap()
 {
+
 	int tileType;
 	char tileSym;
 	short colCode;
+
 	for (int i = 0; i < gameMap.size(); i++)
 	{
 		for (int j = 0; j < gameMap[i].size(); j++)
 		{
 			tileType = gameMap[i][j];
-			mvaddch(i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
+			mvwaddch(gameWin, i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
 		}
 	}
+	touchwin(gameWin);
 }
 
 void GameEngine::getInput(char input)

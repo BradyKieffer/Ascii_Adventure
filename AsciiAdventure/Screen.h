@@ -1,6 +1,6 @@
 /*
 
-	Currently used to control the properties of our screen
+	Base class for a screen
 
 */
 
@@ -20,18 +20,20 @@ public:
 	int getHeight();
 	int getWidth();
 	
+	WINDOW* getWin();
+	void setWin(WINDOW* win);
+
 	void setHeight(int height);
 	void setWidth(int width);
 
-	void initWindow(); // Sets the window up for us 
-
-private:
-	WINDOW* gameWin;
-	int screenHeight, screenWidth;
-
+	void initWindow(); // Sets the window up for us
+	void initSubWin(WINDOW* rootWin, int startY, int startX); /*  Makes this a subwindow (like the HUD) */
 	
 	bool checkSize(int size); //Just make sure the size is greater than 0
 
+private:
+	int screenHeight, screenWidth;
+	WINDOW* window;
 };
 
 #endif // !1 SCREEN_H

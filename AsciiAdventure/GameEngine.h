@@ -16,8 +16,8 @@
 
 #include<curses.h>
 #include<vector>
+
 #include "Map.h"
-#include"Screen.h"
 #include"Player.h"
 #include"MakeColors.h"
 
@@ -46,9 +46,15 @@ public:
 	void gameLoop();
 	void gameInit();
 
+	int getHeight();
+	int getWidth();
+
 private:
 	Player hero; /* The default hero for our game! */
-	Screen gameScreen;
+
+	WINDOW* gameWin;
+	WINDOW* playerHUD;
+	
 	std::vector<std::vector<int>> gameMap;
 	std::vector<TileType> tileIndex;
 	bool mainLoop; /* The main loop for our game */
