@@ -1,7 +1,5 @@
 #include "Map.h"
 
-
-
 Map::Map(int height, int width)
 {
 	srand(time(NULL));
@@ -11,7 +9,6 @@ Map::Map(int height, int width)
 	genMap();
 
 }
-
 
 Map::Map()
 {
@@ -64,13 +61,11 @@ void Map::genMap()
 		roomsPlaced++;
 
 		if (roomsPlaced > 1)
+		{
 			makeHall(x, y);
-		
-
+		}
 		counter++;
 	}
-
-	//addRandomWalls();
 }
 
 void Map::addRandomTrees()
@@ -150,26 +145,27 @@ void Map::getRoomPoint(int& x, int& y)
 	
 }
 
+/* This function is gonna be gross but I can't afford to care anymore :) */
 void Map::makeHall(int x, int y)
 {
 	/* First calc the middle of the room, it's 2 over from x and y  */
 	x += (ROOM_SIZE / 2);
 	y += (ROOM_SIZE / 2);
 
-	bool notConnected = true;
 	int roomOffset = (ROOM_SIZE / 2) ; // Just to offset the start of our loops
 	int xo = 0, yo = 0;
-
+	bool foundHall = false;
 	
 	/* Scan to design some halls that are 90 degrees */
 	for (int i = x + roomOffset; i < mapWidth; i++)
 	{
-		bool foundHall = false;
-
 
 		if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
+		{
 			break;
+		}
 
+		/* First search right then search left */
 		for (int j = 0; j < mapHeight; j++)
 		{
 			if (gameMap[j][i] == GameEngine::TILE_ROCK_FLOOR)
@@ -180,10 +176,14 @@ void Map::makeHall(int x, int y)
 			}
 		}
 
-		gameMap[y][i] = GameEngine::TILE_ROCK_FLOOR;
-
 		if (foundHall == true)
 		{
+			
+			for (int q = x + roomOffset; q <= i; q++)
+			{
+				gameMap[y][q] = GameEngine::TILE_ROCK_FLOOR;
+			}
+			
 			if (yo < y)
 			{
 				carveDownward(x + roomOffset, y, xo, yo);
@@ -195,6 +195,50 @@ void Map::makeHall(int x, int y)
 			break;
 		}
 	}
+
+	/* Scan left */
+	if (foundHall == false)
+	{
+		for (int i = x - roomOffset - 1; i > 0; i--)
+		{
+
+			if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
+			{
+				break; 
+			}
+
+			/* First search right then search left */
+			for (int j = 0; j < mapHeight; j++)
+			{
+				if (gameMap[j][i] == GameEngine::TILE_ROCK_FLOOR)
+				{
+					yo = j;
+					xo = i;
+					foundHall = true;
+				}
+			}
+
+			if (foundHall == true)
+			{
+				for (int q = x - roomOffset; q >= i; q--)
+				{
+					gameMap[y][q] = GameEngine::TILE_ROCK_FLOOR;
+				}
+
+				if (yo < y)
+				{
+					carveDownward(x + roomOffset, y, xo, yo);
+				}
+				else if (yo > y)
+				{
+					carveUpward(x + roomOffset, y, xo, yo);
+				}
+				break;
+			}
+		}
+	}
+
+
 	/* OLD MAKE HALL */
 	/*
 	 First calc the middle of the room, it's 2 over from x and y

@@ -17,6 +17,7 @@ class Object
 {
 public:
 	Object();
+	Object(int yPos, int xPos, chtype symbol, int colour);
 	~Object();
 
 	// Setting the properties of our object

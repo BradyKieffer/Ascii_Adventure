@@ -1,14 +1,22 @@
 #include "Object.h"
 
 
-Object::Object()
-{
-}
 
+Object::Object()
+{ /* Default constructor */ }
+
+Object::Object(int yPos, int xPos, chtype symbol, int colour)
+{
+	/* Every object needs a position, symbol and a colour */
+	setXPos(xPos);
+	setYPos(yPos);
+	setSymbol(symbol);
+	setCol(colour);
+}
 
 Object::~Object()
-{
-}
+{ /* Default Destructor */ }
+
 
 // Setters 
 void Object::setSymbol(chtype symbol){ character = symbol; }

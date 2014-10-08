@@ -6,13 +6,14 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Object.h"
+#include "Actor.h"
+
 class Player :
-	public Object
+	public Actor
 {
 public:
 	Player();
-	Player(int yPos, int xPos);
+	Player(int xPos, int yPos);
 	~Player();
 };
 

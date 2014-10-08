@@ -2,19 +2,12 @@
 
 
 Player::Player()
-{
-	/* Default Constructor */
-}
+{ /* Default Constructor */ }
 
-Player::Player(int yPos, int xPos)
+Player::Player(int yPos, int xPos) : Actor(yPos, xPos,'@' | COLOR_PAIR(100) | A_BOLD, 0)
 {
-	setCol(0);
-	setSymbol('@' | COLOR_PAIR(100) | A_BOLD);
-	setXPos(xPos);
-	setYPos(yPos);
+	/* Will add stuff in here like hp.... etc*/	
 }
-
 
 Player::~Player()
-{
-}
+{ /* Default Destructor */ }
