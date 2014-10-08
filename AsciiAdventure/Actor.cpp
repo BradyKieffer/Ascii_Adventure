@@ -19,6 +19,12 @@ void Actor::setHp(int hp)
 	hitPoints = hp;
 }
 
+bool Actor::isLiving()
+{
+	/* Let's us know if the actor is 'dead' */
+	return isAlive;
+}
+
 void Actor::setStr(float str)
 {
 	if (str > 0)

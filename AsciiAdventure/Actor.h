@@ -25,6 +25,8 @@ public:
 	float getDef();
 	float getSpeed();
 	
+	bool isLiving();
+
 	void setHp(int hp);
 	void setStr(float str);
 	void setDef(float def);
@@ -42,7 +44,6 @@ private:
 	float speed;
 	
 	bool isAlive;
-
 	void die(); /* Called when hp <= 0 */
 
 };

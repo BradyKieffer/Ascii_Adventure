@@ -90,18 +90,23 @@ void GameEngine::gameLoop()
 	
 	setPlayerCoords();
 	
-	while (mainLoop == true)
+	while (hero.isLiving() && mainLoop == true)
 	{
 		displayMap();
 		/*Debugging purposes*/
 		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
 
+		/* Because we want him to die :) */
+		hero.takeDamage(1);
+		std::cout << "Player HP = " << hero.getHp() << std::endl;
+		
 		/* Draw the hero to the screen*/
 		mvwaddch(gameWin,hero.getYPos(), hero.getXPos() ,hero.getSymbol());
 		wrefresh(gameWin);
 
 		/* Draw the enemies */
 		renderEnemies();
+		
 
 		inp = wgetch(gameWin);
 		getInput(inp);
@@ -244,12 +249,10 @@ void GameEngine::renderEnemies()
 		if (rand() % 100 > 98)
 		{
 			enemies[i].takeDamage(999.9);
-			hero.takeDamage(10);
 			//enemies.erase(enemies.begin() + i);
 			//enemieKilled = true;
 			//break;
 		}
-		
 		mvwaddch(gameWin, enemies[i].getYPos(), enemies[i].getXPos(), enemies[i].getSymbol());
 	}
 	/*
