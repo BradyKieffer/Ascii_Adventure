@@ -14,8 +14,14 @@ MakeColors::~MakeColors()
 
 void MakeColors::initColors()
 {
+	/* When death occurs :( */
+	init_pair(COL_DEAD, COLOR_BLUE, COLOR_RED);
+
 	/* Players color selection */
 	init_pair(COL_PLAYER, COLOR_YELLOW, COLOR_BLACK);
+
+	/* BEAR color selection */
+	init_pair(COL_BEAR, COLOR_BEAR, COLOR_BLACK);
 
 	/* Rock (generic) color selection */
 	init_pair(COL_ROCK_FLOOR, COLOR_LIGHT_GREY, COLOR_BLACK);
@@ -34,4 +40,7 @@ void MakeColors::makeNewCols()
 
 	/* Light gray color */
 	init_color(COLOR_LIGHT_GREY, 500, 500, 500);
+
+	/* Dark brown color */
+	init_color(COLOR_BEAR, 250, 200, 0);
 }

@@ -4,7 +4,7 @@
 Player::Player()
 { /* Default Constructor */ }
 
-Player::Player(int yPos, int xPos) : Actor(yPos, xPos,'@' | COLOR_PAIR(100) | A_BOLD, 0)
+Player::Player(int yPos, int xPos) : Actor(yPos, xPos,'@' | COLOR_PAIR(MakeColors::COL_PLAYER) | A_BOLD)
 {
 	/* Will add stuff in here like hp.... etc*/	
 }

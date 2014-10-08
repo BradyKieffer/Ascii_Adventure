@@ -54,6 +54,9 @@ void GameEngine::gameInit()
 	Player tmp(0, 0);
 	hero = tmp;
 	
+	/* Create some bears to battle */
+	makeEnemies();
+
 	gameLoop();
 
 
@@ -72,13 +75,13 @@ void GameEngine::initTiles()
 	tileIndex.resize(3);
 
 	/* Rock floor */
-	tileIndex[TILE_ROCK_FLOOR] = { '.', COL_ROCK_FLOOR, true };
+	tileIndex[TILE_ROCK_FLOOR] = { '.', MakeColors::COL_ROCK_FLOOR, true };
 
 	/* Tree */
-	tileIndex[TILE_TREE] = { 'T' , COL_TREE, false };
+	tileIndex[TILE_TREE] = { 'T', MakeColors::COL_TREE, false };
 
 	/* Wall */
-	tileIndex[TILE_WALL] = { '#', COL_WALL, false };
+	tileIndex[TILE_WALL] = { '#', MakeColors::COL_WALL, false };
 }
 
 void GameEngine::gameLoop()
@@ -96,6 +99,9 @@ void GameEngine::gameLoop()
 		/* Draw the hero to the screen*/
 		mvwaddch(gameWin,hero.getYPos(), hero.getXPos() ,hero.getSymbol());
 		wrefresh(gameWin);
+
+		/* Draw the enemies */
+		renderEnemies();
 
 		inp = wgetch(gameWin);
 		getInput(inp);
@@ -225,5 +231,49 @@ void GameEngine::setPlayerCoords()
 				break;
 			}
 		}
+	}
+}
+
+void GameEngine::renderEnemies()
+{
+	bool enemieKilled = false;
+	for (int i = 0; i < enemies.size(); i++)
+	{
+		// For debug purposes, kill random bears
+
+		if (rand() % 100 > 98)
+		{
+			enemies[i].takeDamage(999.9);
+			hero.takeDamage(10);
+			//enemies.erase(enemies.begin() + i);
+			//enemieKilled = true;
+			//break;
+		}
+		
+		mvwaddch(gameWin, enemies[i].getYPos(), enemies[i].getXPos(), enemies[i].getSymbol());
+	}
+	/*
+	if (enemieKilled)
+	{
+		renderEnemies();
+	}
+	*/
+}
+
+void GameEngine::makeEnemies()
+{
+	enemies.resize(NUM_ENEMIES);
+	for (int i = 0; i < NUM_ENEMIES; i++)
+	{
+		int x = rand() % MAP_WIDTH;
+		int y = rand() % MAP_HEIGHT;
+		
+		while (gameMap[y][x] == GameEngine::TILE_WALL)
+		{
+			x = rand() % MAP_WIDTH;
+			y = rand() % MAP_HEIGHT;
+		}
+		Bear tmp(y, x);
+		enemies[i] = tmp;
 	}
 }

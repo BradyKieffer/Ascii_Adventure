@@ -18,8 +18,9 @@
 #include<vector>
 
 #include "Map.h"
-#include"Player.h"
-#include"MakeColors.h"
+#include "Player.h"
+#include "MakeColors.h"
+#include "Bear.h"
 
 struct TileType
 {
@@ -51,6 +52,8 @@ public:
 
 private:
 	Player hero; /* The default hero for our game! */
+	
+	std::vector<Bear> enemies;
 
 	WINDOW* gameWin;
 	WINDOW* playerHUD;
@@ -61,15 +64,18 @@ private:
 
 	
 	const int MAP_WIDTH = 80, MAP_HEIGHT = 25; /* The size of the map that we will play on */
+	
+	const int NUM_ENEMIES = 10; /* How many enemies will spawn */
 
 	void displayMap();
 	void getInput(char input); /* Will decide what to do based on the users input */
 	void moveChar(int deltaY, int deltaX); /* Add in the deltaX and deltaY and this function will add them to a char's 
 											  coordinates and ensure they are within bounds!!						  */
 	void initTiles();
-
 	void setPlayerCoords();
 
+	void renderEnemies(); /* Takes are enemies array and renders the enemies based on their location */
+	void makeEnemies(); /* Creates our enemies HAHA */
 };
 
 

@@ -12,25 +12,26 @@
 #define OBJECT_H
 
 #include<curses.h>
+#include"MakeColors.h"
 
 class Object
 {
 public:
 	Object();
-	Object(int yPos, int xPos, chtype symbol, int colour);
+	Object(int yPos, int xPos, chtype symbol);
 	~Object();
 
 	// Setting the properties of our object
-	void setSymbol(chtype symbol); 
+	void setSymbol(chtype symbol);
 	void setXPos(int xPos);		
 	void setYPos(int yPos);
-	void setCol(int col);
+	//void setCol(int col);
 
 	// Get the properties of our object 
 	chtype getSymbol();
 	int getXPos();
 	int getYPos();
-	int getCol();
+	//int getCol();
 
 private:
 	chtype character;
