@@ -50,19 +50,6 @@ void Actor::setDef(float def)
 	}
 }
 
-void Actor::setSpeed(float spd)
-{
-	if (speed > 0)
-	{
-		speed = spd;
-	}
-	else
-	{
-		speed = 1.0;
-	}
-}
-
-
 /* Getters */
 int Actor::getHp()
 {
@@ -78,10 +65,6 @@ float Actor::getDef()
 {
 	return defense;
 }
-float Actor::getSpeed()
-{
-	return speed;
-}
 
 void Actor::takeDamage(int damage)
 {
@@ -95,6 +78,50 @@ void Actor::takeDamage(int damage)
 	}
 }
 
+
+void Actor::onMove(Map map,int deltaY, int deltaX)
+{
+	int actY = getYPos();
+	int actX = getXPos();
+	if (actY + deltaY < 0 || actY + deltaY > map.getMapHeight() - 1)
+	{
+		/* If we are here then don't add to the height */
+		deltaY = 0;
+	}
+
+
+	if (actX + deltaX < 0 || actX + deltaX > map.getMapWidth() - 1)
+	{
+		/* If we are here then don't add to the width */
+		deltaX = 0;
+	}
+	int tile = map.getMap()[actY + deltaY][actX + deltaX];
+	if (map.tile.tileIndex[tile].isPassable == true)
+	{
+		/* We are moving onto a floor tile! yay! */
+		/* Add the results to the heroes coordinates */
+		setYPos(actY + deltaY);
+		setXPos(actX + deltaX);
+	}
+}
+
+void Actor::setCoords(Map map)
+{
+	/* For now just set the player to the first found walkable tile */
+	for (int i = 0; i < map.getScreenHeight(); i++)
+	{
+		for (int j = 0; j < map.getScreenWidth(); j++)
+		{
+			if (map.tile.tileIndex[map.getMap()[i][j]].isPassable == true)
+			{
+				/* We found our spot yay! */
+				setYPos(i);
+				setXPos(j);
+				break;
+			}
+		}
+	}
+}
 void Actor::die()
 { 
 

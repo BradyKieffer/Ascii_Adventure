@@ -1,10 +1,15 @@
 #include "Map.h"
 
-Map::Map(int height, int width)
+#include<iostream>
+
+Map::Map(int mHeight, int mWidth, int sHeight, int sWidth)
 {
 	srand(time(NULL));
-	mapWidth = width;
-	mapHeight = height;
+	mapHeight = mHeight;
+	mapWidth = mWidth;
+	screenHeight = sHeight;
+	screenWidth = sWidth;
+	
 	initMap();
 	genMap();
 
@@ -12,19 +17,27 @@ Map::Map(int height, int width)
 
 Map::Map()
 {
-	srand(time(NULL));
-	mapWidth = 10;
-	mapHeight = 10;
-	initMap();
-	genMap();
+	/* Default Constructor */
 }
 
 Map::~Map()
 {
 }
+/* Setters */
+void Map::setMap(std::vector<std::vector<int>> map)
+{
+	gameMap = map;
+}
 
 /* Getters */
 std::vector<std::vector<int>> Map::getMap(){ return gameMap; }
+
+int Map::getTile(int y, int x) { return gameMap[y][x]; }
+
+int Map::getMapHeight(){ return mapHeight; }
+int Map::getMapWidth(){ return mapWidth; }
+int Map::getScreenHeight(){ return screenHeight; }
+int Map::getScreenWidth(){ return screenWidth; }
 
 void Map::initMap()
 {
@@ -34,7 +47,7 @@ void Map::initMap()
 		gameMap[i].resize(mapWidth);
 		for (int j = 0; j < mapWidth; j++)
 		{
-			gameMap[i][j] = GameEngine::TILE_WALL; 
+			gameMap[i][j] = Tile::TILE_WALL; 
 		}
 	}
 }
@@ -55,7 +68,7 @@ void Map::genMap()
 		{
 			for (int j = x; j < xo; j++)
 			{
-				gameMap[i][j] = GameEngine::TILE_ROCK_FLOOR;
+				gameMap[i][j] = Tile::TILE_ROCK_FLOOR;
 			}
 		}
 		roomsPlaced++;
@@ -65,6 +78,27 @@ void Map::genMap()
 			makeHall(x, y);
 		}
 		counter++;
+	}
+}
+
+void Map::displayMap(WINDOW* win, int left, int top)
+{
+	int tileType;
+	char tileSym;
+	short colCode;
+
+	for (int i = 0; i < screenHeight; i++)
+	{
+		for (int j = 0; j < screenWidth; j++)
+		{
+			int wy = i + top;
+			int wx = j + left;
+
+			tileType = gameMap[wy][wx];
+			
+			mvwaddch(win, i, j, tile.tileIndex[tileType].symbol | COLOR_PAIR(tile.tileIndex[tileType].colCode));
+			
+		}
 	}
 }
 
@@ -79,13 +113,13 @@ void Map::addRandomTrees()
 	{
 		randY = (rand() % (mapHeight - 2)) + 1;
 		randX = (rand() % (mapWidth - 2)) + 1;
-		if (gameMap[randY][randX] == GameEngine::TILE_ROCK_FLOOR)
+		if (gameMap[randY][randX] == Tile::TILE_ROCK_FLOOR)
 		{
-			gameMap[randY][randX] = GameEngine::TILE_TREE;
-			gameMap[randY - 1][randX] = GameEngine::TILE_ROCK_FLOOR;
-			gameMap[randY + 1][randX] = GameEngine::TILE_ROCK_FLOOR;
-			gameMap[randY][randX - 1] = GameEngine::TILE_ROCK_FLOOR;
-			gameMap[randY][randX + 1] = GameEngine::TILE_ROCK_FLOOR;
+			gameMap[randY][randX] = Tile::TILE_TREE;
+			gameMap[randY - 1][randX] = Tile::TILE_ROCK_FLOOR;
+			gameMap[randY + 1][randX] = Tile::TILE_ROCK_FLOOR;
+			gameMap[randY][randX - 1] = Tile::TILE_ROCK_FLOOR;
+			gameMap[randY][randX + 1] = Tile::TILE_ROCK_FLOOR;
 			counter++;
 		}
 	}
@@ -102,9 +136,9 @@ void Map::addRandomWalls()
 	{
 		randY = (rand() % (mapHeight - 2)) + 1;
 		randX = (rand() % (mapWidth - 2)) + 1;
-		if (gameMap[randY][randX] == GameEngine::TILE_ROCK_FLOOR)
+		if (gameMap[randY][randX] == Tile::TILE_ROCK_FLOOR)
 		{
-			gameMap[randY][randX] = GameEngine::TILE_WALL;
+			gameMap[randY][randX] = Tile::TILE_WALL;
 			counter++;
 		}
 	}
@@ -160,7 +194,7 @@ void Map::makeHall(int x, int y)
 	for (int i = x + roomOffset; i < mapWidth; i++)
 	{
 
-		if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
+		if (gameMap[y][i] == Tile::TILE_ROCK_FLOOR)
 		{
 			break;
 		}
@@ -168,7 +202,7 @@ void Map::makeHall(int x, int y)
 		/* First search right then search left */
 		for (int j = 0; j < mapHeight; j++)
 		{
-			if (gameMap[j][i] == GameEngine::TILE_ROCK_FLOOR)
+			if (gameMap[j][i] == Tile::TILE_ROCK_FLOOR)
 			{
 				yo = j;
 				xo = i;
@@ -181,7 +215,7 @@ void Map::makeHall(int x, int y)
 			
 			for (int q = x + roomOffset; q <= i; q++)
 			{
-				gameMap[y][q] = GameEngine::TILE_ROCK_FLOOR;
+				gameMap[y][q] = Tile::TILE_ROCK_FLOOR;
 			}
 			
 			if (yo < y)
@@ -202,7 +236,7 @@ void Map::makeHall(int x, int y)
 		for (int i = x - roomOffset - 1; i > 0; i--)
 		{
 
-			if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
+			if (gameMap[y][i] == Tile::TILE_ROCK_FLOOR)
 			{
 				break; 
 			}
@@ -210,7 +244,7 @@ void Map::makeHall(int x, int y)
 			/* First search right then search left */
 			for (int j = 0; j < mapHeight; j++)
 			{
-				if (gameMap[j][i] == GameEngine::TILE_ROCK_FLOOR)
+				if (gameMap[j][i] == Tile::TILE_ROCK_FLOOR)
 				{
 					yo = j;
 					xo = i;
@@ -222,7 +256,7 @@ void Map::makeHall(int x, int y)
 			{
 				for (int q = x - roomOffset; q >= i; q--)
 				{
-					gameMap[y][q] = GameEngine::TILE_ROCK_FLOOR;
+					gameMap[y][q] = Tile::TILE_ROCK_FLOOR;
 				}
 
 				if (yo < y)
@@ -237,59 +271,6 @@ void Map::makeHall(int x, int y)
 			}
 		}
 	}
-
-
-	/* OLD MAKE HALL */
-	/*
-	 First calc the middle of the room, it's 2 over from x and y
-	x += (ROOM_SIZE / 2);
-	y += (ROOM_SIZE / 2);
-
-	int roomOffset = (ROOM_SIZE / 2) + 1; // Just to offset the start of our loops
-
-	int dir = rand() % 11;
-	if (dir < 3)
-	{
-		// Up
-		for (int i = y - roomOffset; i >= 0; i--)
-		{
-			if (gameMap[i][x] == GameEngine::TILE_ROCK_FLOOR)
-				break;
-			gameMap[i][x] = GameEngine::TILE_ROCK_FLOOR;
-		}
-	}
-	else if (dir >= 3 && dir < 5)
-	{
-		// Left
-		for (int i = x - roomOffset; i >= 0; i--)
-		{
-			if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
-				break;
-			gameMap[y][i] = GameEngine::TILE_ROCK_FLOOR;
-		}
-	}
-	else if (dir >= 5 && dir < 7)
-	{
-		// Down
-		for (int i = y + roomOffset; i < mapHeight; i++)
-		{
-			if (gameMap[i][x] == GameEngine::TILE_ROCK_FLOOR)
-				break;
-			gameMap[i][x] = GameEngine::TILE_ROCK_FLOOR;
-		}
-	}
-	else
-	{
-		// Right
-		for (int i = x + roomOffset; i < mapWidth; i++)
-		{
-			if (gameMap[y][i] == GameEngine::TILE_ROCK_FLOOR)
-				break;
-			gameMap[y][i] = GameEngine::TILE_ROCK_FLOOR;
-		}
-	}
-
-	*/
 }
 
 void Map::carveUpward(int x, int y, int xo, int yo)
@@ -297,7 +278,7 @@ void Map::carveUpward(int x, int y, int xo, int yo)
 	/* We carve a hall straight up to connect the room! */
 	for (int i = y; i < yo; i++)
 	{
-		gameMap[i][xo] = GameEngine::TILE_ROCK_FLOOR;
+		gameMap[i][xo] = Tile::TILE_ROCK_FLOOR;
 	}
 }
 
@@ -306,6 +287,6 @@ void Map::carveDownward(int x, int y, int xo, int yo)
 	/* We carve a hall straight up to connect the room! */
 	for (int i = yo; i < y; i++)
 	{
-		gameMap[i][xo] = GameEngine::TILE_ROCK_FLOOR;
+		gameMap[i][xo] = Tile::TILE_ROCK_FLOOR;
 	}
 }

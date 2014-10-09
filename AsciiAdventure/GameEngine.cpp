@@ -17,7 +17,7 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 	col.initColors();
 
 	/* Set up the game window */
-	gameWin = newwin(gameHeight, gameWidth, 0, 0);
+	gameWin = newwin(SCREEN_HEIGHT, SCREEN_WIDTH, 0, 0);
 }
 
 GameEngine::~GameEngine()
@@ -27,59 +27,11 @@ GameEngine::~GameEngine()
 	delwin(gameWin);
 }
 
-/* Getters */
-
-int GameEngine::getHeight()
-{
-	return MAP_HEIGHT;
-}
-
-int GameEngine::getWidth()
-{
-	return MAP_WIDTH;
-}
-
 void GameEngine::gameInit()
 {
-	/* Set up the tile list */
-	initTiles();
-
-	/* Create our world */
-	Map genWorld(MAP_HEIGHT, MAP_WIDTH);
-	gameMap = genWorld.getMap();
-
 	/* Start the game loop */
-	mainLoop = true;
-
-	/* Set up our hero */
-	Player tmp(0, 0);
-	hero = tmp;
-
+	mainLoop = true;	
 	gameLoop();
-
-
-}
-
-void GameEngine::initTiles()
-{
-	/* 
-	Enters the tile values to the vector for the tile index
-	
-	The index will be the tile type
-
-	Values are stored by symbol, color number and if the tile is passable
-	*/
-
-	tileIndex.resize(3);
-
-	/* Rock floor */
-	tileIndex[TILE_ROCK_FLOOR] = { '.', MakeColors::COL_ROCK_FLOOR, true };
-
-	/* Tree */
-	tileIndex[TILE_TREE] = { 'T', MakeColors::COL_TREE, false };
-
-	/* Wall */
-	tileIndex[TILE_WALL] = { '#', MakeColors::COL_WALL, false };
 }
 
 void GameEngine::gameLoop()
@@ -89,25 +41,32 @@ void GameEngine::gameLoop()
 	int top = 0;
 
 	char inp;
+	Map gameMap(MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH);
 	
-	setPlayerCoords();
-	
+	/* Set up our hero */
+	Player tmp(0, 0);
+	hero = tmp;
+	hero.setCoords(gameMap);
+
 	while (hero.isLiving() && mainLoop == true)
 	{
 		
 		left = getScrollX();
 		top = getScrollY();
 
-		displayMap();
+		std::cout << "left: " << gameMap.getMapHeight() << std::endl;
+		
+		gameMap.displayMap(gameWin, left, top);
+
 		/*Debugging purposes*/
 		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
-		
+
 		/* Draw the hero to the screen*/
 		mvwaddch(gameWin,hero.getYPos() - top, hero.getXPos() - left,hero.getSymbol());
 		wrefresh(gameWin);
 
 		inp = wgetch(gameWin);
-		getInput(inp);
+		getInput(gameMap,inp);
 		
 	}
 }
@@ -119,70 +78,52 @@ int GameEngine::getScrollX()
 
 int GameEngine::getScrollY()
 {
-	return std::max(0, std::min(hero.getYPos() - SCREEN_HEIGHT / 2, MAP_HEIGHT - SCREEN_HEIGHT));
+	return std::max(0, std::min(hero.getYPos() - SCREEN_HEIGHT/2, MAP_HEIGHT - SCREEN_HEIGHT));
 }
 
-void GameEngine::displayMap()
-{
-	int tileType;
-	char tileSym;
-	short colCode;
-
-	for (int i = 0; i < SCREEN_HEIGHT; i++)
-	{
-		for (int j = 0; j < SCREEN_WIDTH; j++)
-		{
-			int wx = getScrollX();
-			int wy = getScrollY();
-			tileType = gameMap[i + wy][j + wx];
-			mvwaddch(gameWin, i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
-		}
-	}
-}
-
-void GameEngine::getInput(char input)
+void GameEngine::getInput(Map gameMap, char input)
 {
 	
 	switch (input)
 	{
 	case'4':
 		// Move left 
-		moveChar(0, -1);
+		hero.onMove(gameMap, 0, -1);
 		break;
 
 	case'8':
 		// Move up
-		moveChar(-1, 0);
+		hero.onMove(gameMap, -1, 0);
 		break;
 
 	case '6':
 		// Move right
-		moveChar(0, 1);
+		hero.onMove(gameMap, 0, 1);
 		break;
 
 	case '2':
 		// Move down
-		moveChar(1, 0);
+		hero.onMove(gameMap, 1, 0);
 		break;
 
 	case '7':
 		// Move up-left
-		moveChar(-1, -1);
+		hero.onMove(gameMap, -1, -1);
 		break;
 
 	case '9':
 		// Move up-right
-		moveChar(-1, 1);
+		hero.onMove(gameMap, -1, 1);
 		break;
 
 	case '3':
 		// Move down-right
-		moveChar(1, 1);
+		hero.onMove(gameMap, 1, 1);
 		break;
 
 	case '1':
 		// Move down-left
-		moveChar(1, -1);
+		hero.onMove(gameMap, 1, -1);
 		break;
 
 	case 'Q':
@@ -199,50 +140,5 @@ void GameEngine::getInput(char input)
 
 	default:
 		break;
-	}
-}
-
-void GameEngine::moveChar(int deltaY, int deltaX)
-{
-	
-	if (hero.getYPos() + deltaY < 0 || hero.getYPos() + deltaY > MAP_HEIGHT - 1)
-	{
-		/* If we are here then don't add to the height */
-		deltaY = 0;
-	}
-
-
-	if (hero.getXPos() + deltaX < 0 || hero.getXPos() + deltaX > MAP_WIDTH - 1)
-	{
-		/* If we are here then don't add to the width */
-		deltaX = 0;
-	}
-
-	int tileMoveToType = gameMap[hero.getYPos() + deltaY][hero.getXPos() + deltaX];
-
-	if (tileIndex[tileMoveToType].isPassable == true)
-	{
-		/* We are moving onto a floor tile! yay! */
-		/* Add the results to the heroes coordinates */
-		hero.setYPos(hero.getYPos() + deltaY);
-		hero.setXPos(hero.getXPos() + deltaX);
-	}
-}
-
-void GameEngine::setPlayerCoords()
-{
-	/* For now just set the player to the first found walkable tile */
-	for (int i = 0; i < SCREEN_HEIGHT; i++)
-	{
-		for (int j = 0; j < SCREEN_WIDTH; j++)
-		{
-			if (tileIndex[gameMap[i][j]].isPassable == true)
-			{
-				/* We found our spot yay! */
-				hero.setYPos(i);
-				hero.setXPos(j);
-				break;
-			}
-		}
 	}
 }

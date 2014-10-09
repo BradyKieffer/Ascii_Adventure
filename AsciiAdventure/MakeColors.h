@@ -32,7 +32,8 @@ public:
 		COL_BEAR = 101,
 		COL_ROCK_FLOOR = 1,
 		COL_TREE = 2,
-		COL_WALL = 3
+		COL_WALL = 3,
+		COL_BOUNDS = 4
 	};
 private: 
 	void makeNewCols();

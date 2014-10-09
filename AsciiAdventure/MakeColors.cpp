@@ -31,6 +31,9 @@ void MakeColors::initColors()
 
 	/* Wall color selection */
 	init_pair(COL_WALL, COLOR_WHITE, COLOR_BLACK);
+
+	/* Out of bounds */
+	init_pair(COL_BOUNDS, COLOR_LIGHT_GREY, COLOR_LIGHT_GREY);
 }
 
 void MakeColors::makeNewCols()
