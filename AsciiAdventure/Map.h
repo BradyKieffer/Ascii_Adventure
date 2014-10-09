@@ -29,7 +29,7 @@ public:
 private:
 	std::vector<std::vector<int>> gameMap;
 	
-	const int NUM_ROOMS = 25,ROOM_SIZE = 6;
+	const int NUM_ROOMS = 50,ROOM_SIZE = 6;
 	int mapHeight, mapWidth;
 
 	void initMap();

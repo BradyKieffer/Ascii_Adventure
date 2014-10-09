@@ -1,4 +1,5 @@
 #include "GameEngine.h"
+#include <algorithm> // For max and min 
 
 
 GameEngine::GameEngine(int gameHeight, int gameWidth)
@@ -53,9 +54,6 @@ void GameEngine::gameInit()
 	/* Set up our hero */
 	Player tmp(0, 0);
 	hero = tmp;
-	
-	/* Create some bears to battle */
-	makeEnemies();
 
 	gameLoop();
 
@@ -86,27 +84,27 @@ void GameEngine::initTiles()
 
 void GameEngine::gameLoop()
 {
+	/* Used to center the screen on the hero */
+	int left = 0; 
+	int top = 0;
+
 	char inp;
 	
 	setPlayerCoords();
 	
 	while (hero.isLiving() && mainLoop == true)
 	{
+		
+		left = getScrollX();
+		top = getScrollY();
+
 		displayMap();
 		/*Debugging purposes*/
 		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
-
-		/* Because we want him to die :) */
-		hero.takeDamage(1);
-		std::cout << "Player HP = " << hero.getHp() << std::endl;
 		
 		/* Draw the hero to the screen*/
-		mvwaddch(gameWin,hero.getYPos(), hero.getXPos() ,hero.getSymbol());
+		mvwaddch(gameWin,hero.getYPos() - top, hero.getXPos() - left,hero.getSymbol());
 		wrefresh(gameWin);
-
-		/* Draw the enemies */
-		renderEnemies();
-		
 
 		inp = wgetch(gameWin);
 		getInput(inp);
@@ -114,22 +112,32 @@ void GameEngine::gameLoop()
 	}
 }
 
+int GameEngine::getScrollX()
+{
+	return std::max(0, std::min(hero.getXPos() - SCREEN_WIDTH/2, MAP_WIDTH - SCREEN_WIDTH));
+}
+
+int GameEngine::getScrollY()
+{
+	return std::max(0, std::min(hero.getYPos() - SCREEN_HEIGHT / 2, MAP_HEIGHT - SCREEN_HEIGHT));
+}
+
 void GameEngine::displayMap()
 {
-
 	int tileType;
 	char tileSym;
 	short colCode;
 
-	for (int i = 0; i < gameMap.size(); i++)
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
-		for (int j = 0; j < gameMap[i].size(); j++)
+		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
-			tileType = gameMap[i][j];
+			int wx = getScrollX();
+			int wy = getScrollY();
+			tileType = gameMap[i + wy][j + wx];
 			mvwaddch(gameWin, i, j, tileIndex[tileType].symbol | COLOR_PAIR(tileIndex[tileType].colCode));
 		}
 	}
-	
 }
 
 void GameEngine::getInput(char input)
@@ -224,9 +232,9 @@ void GameEngine::moveChar(int deltaY, int deltaX)
 void GameEngine::setPlayerCoords()
 {
 	/* For now just set the player to the first found walkable tile */
-	for (int i = 0; i < MAP_HEIGHT; i++)
+	for (int i = 0; i < SCREEN_HEIGHT; i++)
 	{
-		for (int j = 0; j < MAP_WIDTH; j++)
+		for (int j = 0; j < SCREEN_WIDTH; j++)
 		{
 			if (tileIndex[gameMap[i][j]].isPassable == true)
 			{
@@ -236,47 +244,5 @@ void GameEngine::setPlayerCoords()
 				break;
 			}
 		}
-	}
-}
-
-void GameEngine::renderEnemies()
-{
-	bool enemieKilled = false;
-	for (int i = 0; i < enemies.size(); i++)
-	{
-		// For debug purposes, kill random bears
-
-		if (rand() % 100 > 98)
-		{
-			enemies[i].takeDamage(999.9);
-			//enemies.erase(enemies.begin() + i);
-			//enemieKilled = true;
-			//break;
-		}
-		mvwaddch(gameWin, enemies[i].getYPos(), enemies[i].getXPos(), enemies[i].getSymbol());
-	}
-	/*
-	if (enemieKilled)
-	{
-		renderEnemies();
-	}
-	*/
-}
-
-void GameEngine::makeEnemies()
-{
-	enemies.resize(NUM_ENEMIES);
-	for (int i = 0; i < NUM_ENEMIES; i++)
-	{
-		int x = rand() % MAP_WIDTH;
-		int y = rand() % MAP_HEIGHT;
-		
-		while (gameMap[y][x] == GameEngine::TILE_WALL)
-		{
-			x = rand() % MAP_WIDTH;
-			y = rand() % MAP_HEIGHT;
-		}
-		Bear tmp(y, x);
-		enemies[i] = tmp;
 	}
 }

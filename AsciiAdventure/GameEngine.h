@@ -62,20 +62,20 @@ private:
 	std::vector<TileType> tileIndex;
 	bool mainLoop; /* The main loop for our game */
 
-	
-	const int MAP_WIDTH = 80, MAP_HEIGHT = 25; /* The size of the map that we will play on */
-	
-	const int NUM_ENEMIES = 10; /* How many enemies will spawn */
+	/* For rendering da game */
+	int getScrollX();
+	int getScrollY();
 
+	
+	const int MAP_WIDTH = 160, MAP_HEIGHT = 50; /* The size of the map that we will play on */
+	const int SCREEN_WIDTH = 80, SCREEN_HEIGHT = 25;
+	
 	void displayMap();
 	void getInput(char input); /* Will decide what to do based on the users input */
 	void moveChar(int deltaY, int deltaX); /* Add in the deltaX and deltaY and this function will add them to a char's 
 											  coordinates and ensure they are within bounds!!						  */
 	void initTiles();
 	void setPlayerCoords();
-
-	void renderEnemies(); /* Takes are enemies array and renders the enemies based on their location */
-	void makeEnemies(); /* Creates our enemies HAHA */
 };
 
 
