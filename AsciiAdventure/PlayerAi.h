@@ -12,11 +12,11 @@ public:
 	PlayerAi();
 	~PlayerAi();
 
-	void onEnter(int& y, int& x, int deltaY, int deltaX, Map& map);
+	void onEnter(int& z, int& y, int& x,int deltaZ, int deltaY, int deltaX, Map& map);
 
 private:
 
-	void dig(int y, int x, Map& map);
+	void dig(int z, int y, int x, Map& map);
 };
 #endif
 

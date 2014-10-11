@@ -27,7 +27,7 @@ public:
 
 	
 
-	GameEngine(int gameHeight, int gameWidth);
+	GameEngine();
 	~GameEngine();
 
 	void gameLoop();
@@ -37,7 +37,7 @@ public:
 	int getWidth();
 
 private:
-	const int MAP_WIDTH = 160, MAP_HEIGHT = 50; /* The size of the map that we will play on */
+	const int MAP_WIDTH = 160, MAP_HEIGHT = 50, MAP_DEPTH= 3; /* The size of the map that we will play on */
 	const int SCREEN_WIDTH = 80, SCREEN_HEIGHT = 25;
 
 	Player hero; /* The default hero for our game! */

@@ -13,9 +13,9 @@ class Player :
 {
 public:
 	Player();
-	Player(int xPos, int yPos);
+	Player(int zPos, int yPos, int xPos);
 	~Player();
-	void onMove(Map& map, int deltaY, int deltaX);
+	void onMove(Map& map, int deltaZ,int deltaY, int deltaX);
 
 private:
 	PlayerAi ai;

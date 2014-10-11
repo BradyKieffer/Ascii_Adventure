@@ -14,7 +14,7 @@ class Bear :
 {
 public:
 	Bear();
-	Bear(int yPos, int xPos);
+	Bear(int zPos, int yPos, int xPos);
 	~Bear();
 
 };

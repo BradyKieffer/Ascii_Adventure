@@ -18,24 +18,26 @@ class Object
 {
 public:
 	Object();
-	Object(int yPos, int xPos, chtype symbol);
+	Object(int zPos,int yPos, int xPos, chtype symbol);
 	~Object();
 
 	// Setting the properties of our object
 	void setSymbol(chtype symbol);
 	void setXPos(int xPos);		
 	void setYPos(int yPos);
+	void setZPos(int zPos);
 	//void setCol(int col);
 
 	// Get the properties of our object 
 	chtype getSymbol();
 	int getXPos();
 	int getYPos();
+	int getZPos();
 	//int getCol();
 
 private:
 	chtype character;
-	int x, y, colour;
+	int x, y, z, colour;
 };
 
 #endif OBJECT_H

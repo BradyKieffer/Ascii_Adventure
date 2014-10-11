@@ -18,11 +18,11 @@ class Actor :
 public:
 
 	Actor();
-	Actor(int yPos, int xPos, chtype symbol);
+	Actor(int zPos, int yPos, int xPos, chtype symbol);
 	~Actor();
 
 	void setCoords(Map map);
-	void onMove(Map map, int deltaY, int deltaX); /* Verifies the move for the actor */
+	void onMove(Map map, int deltaZ, int deltaY, int deltaX); /* Verifies the move for the actor */
 
 	/* To be implemented at a later date */
 	int getHp();

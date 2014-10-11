@@ -3,7 +3,7 @@
 Actor::Actor()
 { /* Default Constructor */ }
 
-Actor::Actor(int yPos, int xPos, chtype symbol) : Object(yPos, xPos, symbol)
+Actor::Actor(int zPos, int yPos, int xPos, chtype symbol) : Object(zPos, yPos, xPos, symbol)
 {
 	/* Need to add HP next :) */
 	setHp(100); // Just for some debugging :).
@@ -45,20 +45,21 @@ void Actor::modifyHP(int damage)
 void Actor::setCoords(Map map)
 {
 	/* For now just set the player to the first found walkable tile */
-	for (int i = 0; i < map.getScreenHeight(); i++)
+	int z = rand() % map.getMapDepth();
+	int y = rand() % map.getMapHeight();
+	int x = rand() % map.getMapWidth();
+	while (map.getMap()[z][y][x] == Tile::TILE_WALL)
 	{
-		for (int j = 0; j < map.getScreenWidth(); j++)
-		{
-			if (map.tile.tileIndex[map.getMap()[i][j]].isPassable == true)
-			{
-				/* We found our spot yay! */
-				setYPos(i);
-				setXPos(j);
-				break;
-			}
-		}
+		z = rand() % map.getMapDepth();
+		y = rand() % map.getMapHeight();
+		x = rand() % map.getMapWidth();
 	}
+
+	setZPos(z);
+	setYPos(y);
+	setXPos(x);
 }
+
 void Actor::die()
 { 
 

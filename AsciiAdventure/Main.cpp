@@ -14,12 +14,9 @@
 #include<curses.h>
 #include "GameEngine.h"
 
-const int HEIGHT = 25;
-const int WIDTH = 80;
-
 int main()
 {
-	GameEngine engine(HEIGHT, WIDTH);
+	GameEngine engine;
 	
 	engine.gameInit();
 	endwin();

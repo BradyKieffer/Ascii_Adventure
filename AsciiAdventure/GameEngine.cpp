@@ -2,7 +2,7 @@
 #include <algorithm> // For max and min 
 
 
-GameEngine::GameEngine(int gameHeight, int gameWidth)
+GameEngine::GameEngine()
 {
 	/* Curses code to set up the background for our input and initialize various other things */
 	initscr();
@@ -39,10 +39,10 @@ void GameEngine::gameLoop()
 	int top = 0;
 
 	char inp;
-	Map gameMap(MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH);
+	Map gameMap(MAP_DEPTH,MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH);
 	
 	/* Set up our hero */
-	Player tmp(0, 0);
+	Player tmp(0, 0, 0);
 	hero = tmp;
 	hero.setCoords(gameMap);
 
@@ -52,10 +52,10 @@ void GameEngine::gameLoop()
 		left = getScrollX();
 		top = getScrollY();
 
-		gameMap.displayMap(gameWin, left, top);
+		gameMap.displayMap(gameWin, left, top, hero.getZPos());
 
 		/*Debugging purposes*/
-		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
+		std::cout << "Player (x,y,z) = " << hero.getXPos() << " , " << hero.getYPos() << " , " << hero.getZPos() << std::endl;
 		
 		/* Draw the hero to the screen*/
 		mvwaddch(gameWin,hero.getYPos() - top, hero.getXPos() - left,hero.getSymbol());
@@ -84,48 +84,60 @@ void GameEngine::getInput(Map& gameMap, char input)
 	{
 	case'4':
 		// Move left 
-		hero.onMove(gameMap, 0, -1);
+		hero.onMove(gameMap, 0, 0, -1);
 		break;
 
 	case'8':
 		// Move up
-		hero.onMove(gameMap, -1, 0);
+		hero.onMove(gameMap, 0, -1, 0);
 		break;
 
 	case '6':
 		// Move right
-		hero.onMove(gameMap, 0, 1);
+		hero.onMove(gameMap, 0, 0, 1);
 		break;
 
 	case '2':
 		// Move down
-		hero.onMove(gameMap, 1, 0);
+		hero.onMove(gameMap, 0, 1, 0);
 		break;
 
 	case '7':
 		// Move up-left
-		hero.onMove(gameMap, -1, -1);
+		hero.onMove(gameMap, 0, -1, -1);
 		break;
 
 	case '9':
 		// Move up-right
-		hero.onMove(gameMap, -1, 1);
+		hero.onMove(gameMap, 0, -1, 1);
 		break;
 
 	case '3':
 		// Move down-right
-		hero.onMove(gameMap, 1, 1);
+		hero.onMove(gameMap, 0, 1, 1);
 		break;
 
 	case '1':
 		// Move down-left
-		hero.onMove(gameMap, 1, -1);
+		hero.onMove(gameMap, 0, 1, -1);
 		break;
 
 	case 'Q':
 	case 'q':
 		// Quit the game
 		mainLoop = false;
+		break;
+		
+	case '<':
+	case ',':
+		// Move up
+		hero.onMove(gameMap, -1, 0, 0);
+		break;
+
+	case '>':
+	case '.':
+		// Move down
+		hero.onMove(gameMap, 1, 0, 0);
 		break;
 
 	case 'R':
