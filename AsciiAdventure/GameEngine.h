@@ -43,8 +43,6 @@ private:
 	Player hero; /* The default hero for our game! */
 
 	WINDOW* gameWin;
-	WINDOW* playerHUD;
-	
 	
 	bool mainLoop; /* The main loop for our game */
 
@@ -52,7 +50,7 @@ private:
 	int getScrollX();
 	int getScrollY();
 
-	void getInput(Map map, char input); /* Will decide what to do based on the users input */
+	void getInput(Map& gameMap, char input); /* Will decide what to do based on the users input */
 };
 
 

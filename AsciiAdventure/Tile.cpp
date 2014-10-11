@@ -34,9 +34,20 @@ void Tile::initTiles()
 	/* Wall */
 	//tileIndex[TILE_WALL] = { '#', MakeColors::COL_WALL, false };
 	makeTile('#', MakeColors::COL_WALL, false, TILE_WALL);
+
+	/* Up Stair */
+	makeTile('<' | A_BOLD, MakeColors::COL_STAIRS, true, TILE_STAIRS_UP);
+
+	/* Down Stair */
+	makeTile('>' | A_BOLD, MakeColors::COL_STAIRS, true, TILE_STAIRS_DOWN);
 }
 
 void Tile::makeTile(chtype symbol, short colCode, bool isPassable, int tileNum)
 {
 	tileIndex.push_back({ symbol, colCode, isPassable, tileNum });
+}
+
+bool Tile::isPassable(int tileType)
+{
+	return tileIndex[tileType].isPassable;
 }

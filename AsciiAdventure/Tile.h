@@ -34,11 +34,15 @@ public:
 		TILE_ROCK_FLOOR = 1,
 		TILE_TREE = 2,
 		TILE_WALL = 3,
+		TILE_STAIRS_UP = 4,
+		TILE_STAIRS_DOWN = 5
 	};
 
 	std::vector<TileType> tileIndex;
 
 	void makeTile(chtype symbol, short colCode, bool isPassable, int tileNum);
+
+	bool isPassable(int tileType);
 
 private:
 	void initTiles();

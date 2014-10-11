@@ -13,11 +13,6 @@ Actor::Actor(int yPos, int xPos, chtype symbol) : Object(yPos, xPos, symbol)
 Actor::~Actor()
 { /* Default Destructor */ }
 
-/* Setters */
-void Actor::setHp(int hp)
-{
-	hitPoints = hp;
-}
 
 bool Actor::isLiving()
 {
@@ -25,48 +20,17 @@ bool Actor::isLiving()
 	return isAlive;
 }
 
-void Actor::setStr(float str)
-{
-	if (str > 0)
-	{
-		strength = str;
-	}
-	else
-	{
-		strength = 1.0;
-	}
-}
-
-
-void Actor::setDef(float def)
-{
-	if (def > 0)
-	{
-		defense = def;
-	}
-	else
-	{
-		defense = 1.0;
-	}
-}
+/* Setters */
+void Actor::setHp(int hp){ hitPoints = hp; }
+void Actor::setStr(float str){ strength = str; }
+void Actor::setDef(float def){ defense = def; }
 
 /* Getters */
-int Actor::getHp()
-{
-	return hitPoints;
-}
+int Actor::getHp(){ return hitPoints; }
+int Actor::getStr(){ return strength; }
+int Actor::getDef(){ return defense;  }
 
-float Actor::getStr()
-{
-	return strength;
-}
-
-float Actor::getDef()
-{
-	return defense;
-}
-
-void Actor::takeDamage(int damage)
+void Actor::modifyHP(int damage)
 {
 	if (isAlive == true)
 	{
@@ -75,33 +39,6 @@ void Actor::takeDamage(int damage)
 		{
 			die();
 		}
-	}
-}
-
-
-void Actor::onMove(Map map,int deltaY, int deltaX)
-{
-	int actY = getYPos();
-	int actX = getXPos();
-	if (actY + deltaY < 0 || actY + deltaY > map.getMapHeight() - 1)
-	{
-		/* If we are here then don't add to the height */
-		deltaY = 0;
-	}
-
-
-	if (actX + deltaX < 0 || actX + deltaX > map.getMapWidth() - 1)
-	{
-		/* If we are here then don't add to the width */
-		deltaX = 0;
-	}
-	int tile = map.getMap()[actY + deltaY][actX + deltaX];
-	if (map.tile.tileIndex[tile].isPassable == true)
-	{
-		/* We are moving onto a floor tile! yay! */
-		/* Add the results to the heroes coordinates */
-		setYPos(actY + deltaY);
-		setXPos(actX + deltaX);
 	}
 }
 

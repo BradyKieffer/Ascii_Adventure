@@ -11,7 +11,7 @@ Map::Map(int mHeight, int mWidth, int sHeight, int sWidth)
 	screenWidth = sWidth;
 	
 	initMap();
-	genMap();
+	makeCaves(NUM_TIMES);
 
 }
 
@@ -23,11 +23,32 @@ Map::Map()
 Map::~Map()
 {
 }
+
+Map& Map::operator=(const Map& rhs)
+{
+	swap(rhs);
+	return *this;
+}
+
+void Map::swap(Map rhs)
+{
+	setMapHeight(rhs.getMapHeight());
+	setMapWidth(rhs.getMapWidth());
+	setScreenHeight(rhs.getScreenHeight());
+	setScreenWidth(rhs.getScreenWidth());
+	setMap(rhs.getMap());
+}
+
 /* Setters */
 void Map::setMap(std::vector<std::vector<int>> map)
 {
 	gameMap = map;
 }
+void Map::setMapHeight(int mHeight){ mapHeight = mHeight; }
+void Map::setMapWidth(int mWidth){ mapWidth = mWidth; }
+void Map::setScreenHeight(int sHeight){ screenHeight = sHeight; }
+void Map::setScreenWidth(int sWidth){ screenWidth = sWidth; }
+
 
 /* Getters */
 std::vector<std::vector<int>> Map::getMap(){ return gameMap; }
@@ -144,7 +165,6 @@ void Map::addRandomWalls()
 	}
 }
 
-
 void Map::genRandPoints(int& x, int& y, int& xo, int& yo)
 {
 	/* Make us some good ol' random points! */
@@ -178,6 +198,80 @@ void Map::getRoomPoint(int& x, int& y)
 	y = rand() % (mapHeight - 5);
 	
 }
+
+
+/* The new map gen will be going here yay :D */
+void Map::makeCaves(int times)
+{
+	placeTiles();
+	int numStairsPlaced = 0;
+	while (times > 0)
+	{
+		smooth(numStairsPlaced);
+		--times;
+	}
+}
+
+void Map::placeTiles()
+{
+	for (int i = 0; i < mapHeight; ++i)
+	{
+		for (int j = 0; j < mapWidth; ++j)
+		{
+			/* We want an equal ration between walls and floors */
+			if (rand() % 100 < 50)
+			{
+				gameMap[i][j] = Tile::TILE_ROCK_FLOOR;
+			}
+			else
+			{
+				gameMap[i][j] = Tile::TILE_WALL;
+			}
+		}
+	}
+}
+
+void Map::smooth(int& numStairsPlaced)
+{
+	for (int y = 1; y < mapHeight - 1; ++y)
+	{
+		for (int x = 1; x < mapWidth - 1; ++x)
+		{
+			int numWalls = 0, numFloors = 0, xo, yo;
+			for (yo = -1; yo <= 1; ++yo)
+			{
+				for (xo = -1; xo <= 1; ++xo)
+				{
+					if (gameMap[y + yo][x + xo] == Tile::TILE_WALL)
+					{
+						++numWalls;
+					}
+					else
+					{
+						++numFloors;
+					}
+					
+				}
+			}
+			
+			if (numWalls > numFloors)
+			{
+				gameMap[y][x] = Tile::TILE_WALL;
+			}
+			else
+			{
+				gameMap[y][x] = Tile::TILE_ROCK_FLOOR;
+			}
+
+			if (numFloors == 9 && numStairsPlaced < NUM_STAIRS_PER_FLOOR && rand() % 1000 < 5)
+			{
+				gameMap[y][x] = rand() % 100 < 50 ? Tile::TILE_STAIRS_DOWN : Tile::TILE_STAIRS_UP;
+			}
+
+		}
+	}
+}
+
 
 /* This function is gonna be gross but I can't afford to care anymore :) */
 void Map::makeHall(int x, int y)

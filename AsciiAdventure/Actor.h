@@ -8,8 +8,8 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-#include"Object.h"
-
+#include "Object.h"
+#include "ActorAi.h"
 #include "Map.h"
 
 class Actor : 
@@ -26,8 +26,8 @@ public:
 
 	/* To be implemented at a later date */
 	int getHp();
-	float getStr();
-	float getDef();
+	int getStr();
+	int getDef();
 	
 	void setHp(int hp);
 	void setStr(float str);
@@ -35,14 +35,11 @@ public:
 
 	bool isLiving();
 	void attack(Actor attacker, Actor defender);
-	void takeDamage(int damage); /* Damages the given actor */
+	void modifyHP(int damage); /* Damages the given actor */
 	
 private:
-
 	/* Stats for each actor */
-	int hitPoints;
-	float strength;
-	float defense;
+	int hitPoints, strength, defense;
 	
 	bool isAlive;
 	void die(); /* Called when hp <= 0 */

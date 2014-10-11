@@ -14,7 +14,10 @@ Implement and store colors here
 enum ColNameNums
 {
 	COLOR_LIGHT_GREY = 100,
-	COLOR_BEAR = 101
+	COLOR_DARK_BROWN = 101,
+	COLOR_WALL_BROWN = 102,
+	COLOR_FLOOR_BROWN = 103,
+	COLOR_STAIRS = 104
 };
 
 class MakeColors
@@ -33,7 +36,8 @@ public:
 		COL_ROCK_FLOOR = 1,
 		COL_TREE = 2,
 		COL_WALL = 3,
-		COL_BOUNDS = 4
+		COL_BOUNDS = 4,
+		COL_STAIRS = 5
 	};
 private: 
 	void makeNewCols();

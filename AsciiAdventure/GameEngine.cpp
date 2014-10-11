@@ -22,8 +22,6 @@ GameEngine::GameEngine(int gameHeight, int gameWidth)
 
 GameEngine::~GameEngine()
 {
-
-	delwin(playerHUD);
 	delwin(gameWin);
 }
 
@@ -54,13 +52,11 @@ void GameEngine::gameLoop()
 		left = getScrollX();
 		top = getScrollY();
 
-		std::cout << "left: " << gameMap.getMapHeight() << std::endl;
-		
 		gameMap.displayMap(gameWin, left, top);
 
 		/*Debugging purposes*/
 		std::cout << "Player (x,y) = " << hero.getXPos() << " , " << hero.getYPos() << std::endl;
-
+		
 		/* Draw the hero to the screen*/
 		mvwaddch(gameWin,hero.getYPos() - top, hero.getXPos() - left,hero.getSymbol());
 		wrefresh(gameWin);
@@ -81,7 +77,7 @@ int GameEngine::getScrollY()
 	return std::max(0, std::min(hero.getYPos() - SCREEN_HEIGHT/2, MAP_HEIGHT - SCREEN_HEIGHT));
 }
 
-void GameEngine::getInput(Map gameMap, char input)
+void GameEngine::getInput(Map& gameMap, char input)
 {
 	
 	switch (input)
