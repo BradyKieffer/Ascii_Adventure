@@ -41,9 +41,10 @@ void GameEngine::gameLoop()
 	char inp;
 	Map gameMap(MAP_DEPTH,MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH);
 	
+	//ActorFactory factory;
+	//factory.spawnEnemies(gameMap);
+
 	/* Set up our hero */
-	Player tmp(0, 0, 0);
-	hero = tmp;
 	hero.setCoords(gameMap);
 
 	while (hero.isLiving() && mainLoop == true)
@@ -53,16 +54,23 @@ void GameEngine::gameLoop()
 		top = getScrollY();
 
 		gameMap.displayMap(gameWin, left, top, hero.getZPos());
-
+		//factory.displayEnemies(gameWin, gameMap, top, left, hero.getZPos());
+		
 		/*Debugging purposes*/
 		std::cout << "Player (x,y,z) = " << hero.getXPos() << " , " << hero.getYPos() << " , " << hero.getZPos() << std::endl;
-		
+			
 		/* Draw the hero to the screen*/
-		mvwaddch(gameWin,hero.getYPos() - top, hero.getXPos() - left,hero.getSymbol());
+		mvwaddch(gameWin, hero.getYPos() - top, hero.getXPos() - left, hero.getSymbol());
+
+
 		wrefresh(gameWin);
 
 		inp = wgetch(gameWin);
 		getInput(gameMap,inp);
+
+		/* Allow the enemies to decide what they be doin next */
+		//factory.updateEnemies(gameMap);
+
 		
 	}
 }

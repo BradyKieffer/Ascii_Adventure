@@ -9,21 +9,33 @@
 #ifndef ACTOR_FACTORY_H
 #define ACTOR_FACTORY_H
 
-#include <list>
+#include <vector>
+#include "curses.h"
 #include "Actor.h"
 #include "Map.h"
+#include "Bear.h"
 
 class ActorFactory
 {
 public:
-	ActorFactory(Map gameMap);
+	ActorFactory();
 	~ActorFactory();
 
-	void setMap(Map gameMap); 
+
+	std::vector<Actor> getActorList();
+
+	 void makeBears(int numBears, Map map);
+
+	 void spawnEnemies(Map map);
+	 void displayEnemies(WINDOW* gameWin, Map map, int top, int left, int currDepth);
+	 void updateEnemies(Map map);
 
 private:
-	std::list<Actor> actors;
-	Map map;
+	const int NUM_BEARS = 10;
+
+	std::vector<Actor> actors;
+
+	void newBear(Map map);
 };
 
 #endif

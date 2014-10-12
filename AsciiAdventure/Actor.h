@@ -9,7 +9,6 @@
 #define ACTOR_H
 
 #include "Object.h"
-#include "ActorAi.h"
 #include "Map.h"
 
 class Actor : 
@@ -21,8 +20,13 @@ public:
 	Actor(int zPos, int yPos, int xPos, chtype symbol);
 	~Actor();
 
+	Actor& operator=(const Actor& rhs);
+
 	void setCoords(Map map);
-	void onMove(Map map, int deltaZ, int deltaY, int deltaX); /* Verifies the move for the actor */
+	void onUpdate(Map map); /* This function should be overloaded, it will be called on each
+						actor object when it is their turn to move, by default it will
+						just call onMove */
+	void onMove(Map map); /* Moves the actor in a random dir. */
 
 	/* To be implemented at a later date */
 	int getHp();
@@ -36,12 +40,17 @@ public:
 	bool isLiving();
 	void attack(Actor attacker, Actor defender);
 	void modifyHP(int damage); /* Damages the given actor */
+	void dig(int z, int y, int x, Map& map); /* If the actor wants to dig through a wall */
 	
 private:
+
+	void swap(Actor rhs);
+
 	/* Stats for each actor */
 	int hitPoints, strength, defense;
 	
 	bool isAlive;
+
 	void die(); /* Called when hp <= 0 */
 
 };

@@ -87,7 +87,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
-    <ClCompile Include="ActorAi.cpp" />
     <ClCompile Include="ActorFactory.cpp" />
     <ClCompile Include="Bear.cpp" />
     <ClCompile Include="GameEngine.cpp" />
@@ -96,12 +95,10 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerAi.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actor.h" />
-    <ClInclude Include="ActorAi.h" />
     <ClInclude Include="ActorFactory.h" />
     <ClInclude Include="Bear.h" />
     <ClInclude Include="GameEngine.h" />
@@ -109,7 +106,6 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerAi.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

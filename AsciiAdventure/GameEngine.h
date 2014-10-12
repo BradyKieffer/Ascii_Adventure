@@ -20,13 +20,11 @@
 #include "Player.h"
 #include "MakeColors.h"
 #include "Bear.h"
+#include "ActorFactory.h"
 
 class GameEngine
 {
 public:
-
-	
-
 	GameEngine();
 	~GameEngine();
 
@@ -37,11 +35,12 @@ public:
 	int getWidth();
 
 private:
-	const int MAP_WIDTH = 160, MAP_HEIGHT = 50, MAP_DEPTH= 3; /* The size of the map that we will play on */
+	const int MAP_WIDTH = 80, MAP_HEIGHT = 25, MAP_DEPTH= 1; /* The size of the map that we will play on */
 	const int SCREEN_WIDTH = 80, SCREEN_HEIGHT = 25;
 
+	
+	ActorFactory factory;
 	Player hero; /* The default hero for our game! */
-
 	WINDOW* gameWin;
 	
 	bool mainLoop; /* The main loop for our game */

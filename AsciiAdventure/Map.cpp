@@ -35,8 +35,11 @@ void Map::swap(Map rhs)
 {
 	setMapHeight(rhs.getMapHeight());
 	setMapWidth(rhs.getMapWidth());
+	setMapDepth(rhs.getMapDepth());
+
 	setScreenHeight(rhs.getScreenHeight());
 	setScreenWidth(rhs.getScreenWidth());
+	
 	setMap(rhs.getMap());
 }
 
@@ -44,7 +47,7 @@ void Map::swap(Map rhs)
 void Map::setMap(std::vector<std::vector<std::vector<int>>> map){ gameMap = map; }
 void Map::setMapHeight(int mHeight){ mapHeight = mHeight; }
 void Map::setMapWidth(int mWidth){ mapWidth = mWidth; }
-void Map::setMapDepth(int mDepth){ mapDepth - mDepth; }
+void Map::setMapDepth(int mDepth){ mapDepth = mDepth; }
 void Map::setScreenHeight(int sHeight){ screenHeight = sHeight; }
 void Map::setScreenWidth(int sWidth){ screenWidth = sWidth; }
 
