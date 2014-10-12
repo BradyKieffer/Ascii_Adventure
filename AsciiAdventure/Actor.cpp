@@ -1,10 +1,7 @@
 #include "Actor.h"
 
-Actor::Actor()
-{ /* Default Constructor */ }
-
-Actor::Actor(int zPos, int yPos, int xPos, chtype symbol) : Object(zPos, yPos, xPos, symbol)
-{
+Actor::Actor() : Object(0, 0, 0, '!','!' | A_BOLD | A_BLINK)
+{ 
 	/* Need to add HP next :) */
 	setHp(100); // Just for some debugging :).
 	isAlive = true;
@@ -61,7 +58,7 @@ void Actor::modifyHP(int damage)
 	}
 }
 
-void Actor::onUpdate(Map map)
+void Actor::onUpdate(Map& map)
 {
 	onMove(map);
 }
@@ -84,15 +81,15 @@ void Actor::setCoords(Map map)
 	setXPos(x);
 }
 
-void Actor::onMove(Map map)
+void Actor::onMove(Map& map)
 {
 	int actZ = getZPos();
 	int actY = getYPos();
 	int actX = getXPos();
 
 	int deltaZ = 0;
-	int deltaY = rand() % 1 - 2;
-	int deltaX = rand() % 1 - 2;
+	int deltaY = rand() % 3 - 1;
+	int deltaX = rand() % 3 - 1;
 
 	if (actZ + deltaZ < 0 || actZ + deltaZ > map.getMapDepth() - 1)
 	{
@@ -113,7 +110,7 @@ void Actor::onMove(Map map)
 
 		deltaX = 0;
 	}
-
+	
 	int tileType = map.getMap()[actZ + deltaZ][actY + deltaY][actX + deltaX];
 
 	if (map.tile.isPassable(tileType))
@@ -130,7 +127,7 @@ void Actor::onMove(Map map)
 
 void Actor::die()
 { 
-	setSymbol('X' | A_DIM | COLOR_PAIR(MakeColors::COL_DEAD));
+	setSymbol(getChar() | A_DIM | COLOR_PAIR(MakeColors::COL_DEAD));
 	isAlive = false;
 }
 

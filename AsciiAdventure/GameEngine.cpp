@@ -41,10 +41,11 @@ void GameEngine::gameLoop()
 	char inp;
 	Map gameMap(MAP_DEPTH,MAP_HEIGHT, MAP_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH);
 	
-	//ActorFactory factory;
-	//factory.spawnEnemies(gameMap);
+	factory.spawnEnemies(gameMap);
 
 	/* Set up our hero */
+	hero.setChar('@');
+	hero.setSymbol('@' | COLOR_PAIR(MakeColors::COL_PLAYER) | A_BOLD);
 	hero.setCoords(gameMap);
 
 	while (hero.isLiving() && mainLoop == true)
@@ -54,7 +55,7 @@ void GameEngine::gameLoop()
 		top = getScrollY();
 
 		gameMap.displayMap(gameWin, left, top, hero.getZPos());
-		//factory.displayEnemies(gameWin, gameMap, top, left, hero.getZPos());
+		factory.displayEnemies(gameWin, gameMap, top, left, hero.getZPos());
 		
 		/*Debugging purposes*/
 		std::cout << "Player (x,y,z) = " << hero.getXPos() << " , " << hero.getYPos() << " , " << hero.getZPos() << std::endl;
@@ -69,10 +70,11 @@ void GameEngine::gameLoop()
 		getInput(gameMap,inp);
 
 		/* Allow the enemies to decide what they be doin next */
-		//factory.updateEnemies(gameMap);
+		factory.updateEnemies(gameMap);
 
 		
 	}
+	factory.deleteList();
 }
 
 int GameEngine::getScrollX()
@@ -151,6 +153,7 @@ void GameEngine::getInput(Map& gameMap, char input)
 	case 'R':
 	case 'r':
 		/* Debug for now.. */
+		factory.deleteList();
 		gameInit();
 		break;
 

@@ -18,8 +18,9 @@ void ActorFactory::newBear(Map map)
 {
 	Bear bear;
 	bear.setCoords(map);
-	actors.resize(actors.size() + 1);
-	actors[actors.size() - 1] = bear;
+	bear.setChar('B');
+	bear.setSymbol('B' | COLOR_PAIR(MakeColors::COL_BEAR));
+	actors.push_back(bear);
 }
 
 void ActorFactory::makeBears(int numBears, Map map)
@@ -62,11 +63,15 @@ void ActorFactory::displayEnemies(WINDOW* gameWin,Map map, int top, int left, in
 	}
 }
 
-void ActorFactory::updateEnemies(Map map)
+void ActorFactory::updateEnemies(Map& map)
 {
 	for (int i = 0; i < actors.size(); ++i)
 	{
-		Actor actor = actors[i];
-		actor.onUpdate(map);
+		actors[i].onUpdate(map);
 	}
+}
+
+void ActorFactory::deleteList()
+{
+	actors.resize(0);
 }

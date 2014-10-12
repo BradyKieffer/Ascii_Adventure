@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player() : Actor(0, 0, 0, '@' | COLOR_PAIR(MakeColors::COL_PLAYER) | A_BOLD)
+Player::Player() : Actor()
 { /* Default Constructor */ }
 
 Player::~Player()
@@ -34,7 +34,6 @@ void Player::onMove(Map& map, int deltaZ, int deltaY, int deltaX)
 	}
 
 	int tileType = map.getMap()[actZ + deltaZ][actY + deltaY][actX + deltaX];
-
 	if (map.tile.isPassable(tileType))
 	{
 		setZPos(actZ + deltaZ);

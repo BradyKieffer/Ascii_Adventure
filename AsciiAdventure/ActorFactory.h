@@ -28,7 +28,9 @@ public:
 
 	 void spawnEnemies(Map map);
 	 void displayEnemies(WINDOW* gameWin, Map map, int top, int left, int currDepth);
-	 void updateEnemies(Map map);
+	 void updateEnemies(Map& map);
+
+	 void deleteList();
 
 private:
 	const int NUM_BEARS = 10;

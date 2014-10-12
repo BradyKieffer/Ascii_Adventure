@@ -21,7 +21,7 @@ void Tile::initTiles()
 	*/
 
 	/* Boundary Tiles */
-	makeTile(' ' | A_DIM, MakeColors::COL_BOUNDS, false, TILE_BOUNDS);
+	makeTile(' ' | A_DIM, MakeColors::COL_BOUNDS, false,TILE_BOUNDS);
 
 	/* Rock floor */
 	//tileIndex[TILE_ROCK_FLOOR] = { '.', MakeColors::COL_ROCK_FLOOR, true };
@@ -29,17 +29,17 @@ void Tile::initTiles()
 
 	/* Tree */
 	//tileIndex[TILE_TREE] = { 'T', MakeColors::COL_TREE, false };
-	makeTile('T', MakeColors::COL_TREE, false, TILE_TREE);
+	makeTile('T', MakeColors::COL_TREE, false,  TILE_TREE);
 
 	/* Wall */
 	//tileIndex[TILE_WALL] = { '#', MakeColors::COL_WALL, false };
-	makeTile('#', MakeColors::COL_WALL, false, TILE_WALL);
+	makeTile('#', MakeColors::COL_WALL, false,  TILE_WALL);
 
 	/* Up Stair */
-	makeTile('<' | A_BOLD, MakeColors::COL_STAIRS, true, TILE_STAIRS_UP);
+	makeTile('<' | A_BOLD, MakeColors::COL_STAIRS, true,  TILE_STAIRS_UP);
 
 	/* Down Stair */
-	makeTile('>' | A_BOLD, MakeColors::COL_STAIRS, true, TILE_STAIRS_DOWN);
+	makeTile('>' | A_BOLD, MakeColors::COL_STAIRS, true,  TILE_STAIRS_DOWN);
 }
 
 void Tile::makeTile(chtype symbol, short colCode, bool isPassable, int tileNum)
