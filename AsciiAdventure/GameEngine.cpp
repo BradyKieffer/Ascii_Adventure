@@ -71,10 +71,7 @@ void GameEngine::gameLoop()
 
 		/* Allow the enemies to decide what they be doin next */
 		factory.updateEnemies(gameMap);
-
-		
 	}
-	factory.deleteList();
 }
 
 int GameEngine::getScrollX()
@@ -153,7 +150,7 @@ void GameEngine::getInput(Map& gameMap, char input)
 	case 'R':
 	case 'r':
 		/* Debug for now.. */
-		factory.deleteList();
+		factory.~ActorFactory();
 		gameInit();
 		break;
 

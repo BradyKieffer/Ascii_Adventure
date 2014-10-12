@@ -16,6 +16,20 @@ public:
 	Bear();
 	~Bear();
 
+	void onUpdate(Map& map);
+
+	void onMove(Map& map);
+	void wander(Map& map);
+
+private:
+	const int FOV = 5; /* How many tiles the bears can 'see' */
+	
+	int rageTurns;
+	bool isRage;
+
+	void lookForPlayer(Map& map);
+	void rage(); /* The bears special ability makes them rage */
 };
+
 
 #endif

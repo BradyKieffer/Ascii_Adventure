@@ -22,22 +22,25 @@ public:
 	~ActorFactory();
 
 
-	std::vector<Actor> getActorList();
-
 	 void makeBears(int numBears, Map map);
-
+	
 	 void spawnEnemies(Map map);
+	 
 	 void displayEnemies(WINDOW* gameWin, Map map, int top, int left, int currDepth);
+	
 	 void updateEnemies(Map& map);
 
-	 void deleteList();
-
+	 
 private:
 	const int NUM_BEARS = 10;
 
-	std::vector<Actor> actors;
+	std::vector<Actor> masterActorList; /* We will use this to attack etc. */
+
+	std::vector<Bear> bears;
 
 	void newBear(Map map);
+	void displayBears(WINDOW* gameWin, Map map, int top, int left, int currDepth);
+	void updateBears(Map& map);
 };
 
 #endif

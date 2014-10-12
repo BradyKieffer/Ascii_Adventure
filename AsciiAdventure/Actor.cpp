@@ -60,7 +60,10 @@ void Actor::modifyHP(int damage)
 
 void Actor::onUpdate(Map& map)
 {
-	onMove(map);
+	if (isLiving())
+	{
+		onMove(map);
+	}
 }
 
 void Actor::setCoords(Map map)

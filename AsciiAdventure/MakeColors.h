@@ -37,7 +37,8 @@ public:
 		COL_TREE = 2,
 		COL_WALL = 3,
 		COL_BOUNDS = 4,
-		COL_STAIRS = 5
+		COL_STAIRS = 5,
+		COL_RAGE = 6
 	};
 private: 
 	void makeNewCols();

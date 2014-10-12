@@ -2,16 +2,31 @@
 #include <iostream>
 
 
-ActorFactory::ActorFactory(){}
+ActorFactory::ActorFactory()
+{}
 
 ActorFactory::~ActorFactory()
 {
+	bears.resize(0);
 }
 
-
-std::vector<Actor> ActorFactory::getActorList()
+/* For now this only makes one enemy but it will eventually make more */
+void ActorFactory::displayEnemies(WINDOW* gameWin,Map map, int top, int left, int currDepth)
 {
-	return actors;
+	/* Bears */
+	displayBears(gameWin, map, top, left, currDepth);
+}
+
+void ActorFactory::updateEnemies(Map& map)
+{
+	/* Bears */
+	updateBears(map);
+}
+
+void ActorFactory::spawnEnemies(Map map)
+{
+	/* Bears */
+	makeBears(NUM_BEARS, map);
 }
 
 void ActorFactory::newBear(Map map)
@@ -20,7 +35,7 @@ void ActorFactory::newBear(Map map)
 	bear.setCoords(map);
 	bear.setChar('B');
 	bear.setSymbol('B' | COLOR_PAIR(MakeColors::COL_BEAR));
-	actors.push_back(bear);
+	bears.push_back(bear);
 }
 
 void ActorFactory::makeBears(int numBears, Map map)
@@ -32,22 +47,16 @@ void ActorFactory::makeBears(int numBears, Map map)
 	}
 }
 
-/* For now this only makes one enemy but it will eventually make more */
-void ActorFactory::spawnEnemies(Map map)
+void ActorFactory::displayBears(WINDOW* gameWin, Map map, int top, int left, int currDepth)
 {
-	makeBears(NUM_BEARS, map);
-}
-
-void ActorFactory::displayEnemies(WINDOW* gameWin,Map map, int top, int left, int currDepth)
-{
-	for (int currActor = 0; currActor < actors.size(); ++currActor)
+	for (int currActor = 0; currActor < bears.size(); ++currActor)
 	{
-		
-		int actX = actors[currActor].getXPos() - left;
-		int actY = actors[currActor].getYPos() - top;
-		int actZ = actors[currActor].getZPos();
 
-		if (actX < 0 || actX > map.getScreenWidth()  ||
+		int actX = bears[currActor].getXPos() - left;
+		int actY = bears[currActor].getYPos() - top;
+		int actZ = bears[currActor].getZPos();
+
+		if (actX < 0 || actX > map.getScreenWidth() ||
 			actY < 0 || actY > map.getScreenHeight() ||
 			actZ != currDepth)
 		{
@@ -55,7 +64,7 @@ void ActorFactory::displayEnemies(WINDOW* gameWin,Map map, int top, int left, in
 		}
 		else
 		{
-			chtype glyph = actors[currActor].getSymbol();
+			chtype glyph = bears[currActor].getSymbol();
 			/* On screen so draw it */
 			mvwaddch(gameWin, actY, actX, glyph);
 		}
@@ -63,15 +72,10 @@ void ActorFactory::displayEnemies(WINDOW* gameWin,Map map, int top, int left, in
 	}
 }
 
-void ActorFactory::updateEnemies(Map& map)
+void ActorFactory::updateBears(Map& map)
 {
-	for (int i = 0; i < actors.size(); ++i)
+	for (int i = 0; i < bears.size(); ++i)
 	{
-		actors[i].onUpdate(map);
+		bears[i].onUpdate(map);
 	}
-}
-
-void ActorFactory::deleteList()
-{
-	actors.resize(0);
 }

@@ -38,6 +38,9 @@ void MakeColors::initColors()
 
 	/* Stairs */
 	init_pair(COL_STAIRS, COLOR_BLACK, COLOR_FLOOR_BROWN);
+
+	/* When a creature rages */
+	init_pair(COL_RAGE, COLOR_BLACK, COLOR_RED);
 }
 
 void MakeColors::makeNewCols()
